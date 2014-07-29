@@ -103,7 +103,6 @@ class RetinaImage extends Image {
 	public function getFormattedImage($format) {
 		$args = func_get_args();
 		
-
 		if ($this->ID && $this->Filename && Director::fileExists($this->Filename)) {
 			$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
 			$filename = Director::baseFolder() . "/" . $cacheFile;
@@ -244,9 +243,12 @@ class RetinaImage_Cached extends RetinaImage {
 		$onex15 = $this->insertFilenameAppender($url, '-15x');
 		$onex20 = $this->insertFilenameAppender($url, '-20x');
 
-		$width = $this->getWidth();
-		$height = $this->getHeight();
-		return "<img src=\"$onex10\" alt=\"$title\" width=\"$width\" height=\"$height\" srcset=\"$onex10 1x, $onex15 1.5x, $onex20 2x\" />";
+		// try to get the 10x file size
+		$filename = urldecode(Director::makeRelative($onex10));
+		$imagefile = Director::baseFolder() . '/' . $filename;
+		$size = getimagesize($imagefile);
+		
+		return "<img src=\"$onex10\" alt=\"$title\" width=\"$size[0]\" height=\"$size[1]\" srcset=\"$onex10 1x, $onex15 1.5x, $onex20 2x\" />";
 	}
 }
 
