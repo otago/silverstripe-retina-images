@@ -1,0 +1,7 @@
+---
+Name: RetinaImage
+---
+RetinaImage:
+    qualityDegrade: 20
+    qualityCap: 30
+    default_quality: 90
