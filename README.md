@@ -15,9 +15,9 @@ non-webkit browsers require this.
 
 ## Usage
 
-+Install the add-on
-+run ?flush=1 on your page
-+done! time for a beer
++ Install the add-on
++ run ?flush=1 on your page
++ done! time for a beer
 
 ## WYSIWYG support
 
@@ -33,7 +33,7 @@ $fields->addFieldToTab('Root.Main',
 );
 ```
 
-## how it works
+## How it works
 
 When creating a generated image it creates three different images, scaled up to
 the following factors: 1.0x, 1.5x, and 2.0x. The default generated image is 
