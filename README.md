@@ -1,6 +1,6 @@
 # Retina images
 
-## An add-on for adaptive images.
+## An add-on for adaptive images
 
 Allows support for high-resolution displays by automatically creating different 
 assets representing the same image. It specifies bitmapped images by adding a 
@@ -13,6 +13,11 @@ to your getCMSFields() method.
 Non-compliant browsers require a polyfill. At this time of writing, all 
 non-webkit browsers require this.
 
+**Only resized images** will be have adaptive images generated, for example
+```$Image.paddedImage(50)```. There's no point in upscaling native images, but
+you can force halving images changing the boolean on ```$forceretina``` in ```RetinaImage.php```.
+Note this will half the size of every non resized image.
+
 ## Usage
 
 + Install the add-on
@@ -21,9 +26,10 @@ non-webkit browsers require this.
 
 ## WYSIWYG support
 
-You'll need to modify your WYSIWYG editor. You can by creating \HtmlEditorField 
-fields in your getCMSFields() function. In most cases you'll only need to do
-this once in your Page.php file:
+You'll need to modify your ```getCMSFields()``` function. ```create()``` a 
+\HtmlEditorField isntead of using ```new```, there's a custom class that will 
+modify its behaviour. In most cases you'll only need to do this once in your
+Page.php file:
 
 ```
 $fields->removeFieldFromTab('Root.Main', 'Content');
