@@ -20,7 +20,7 @@ class RetinaImage extends Image {
 		
 		// native res - down size by 2x.
 		if (strstr($this->Filename, '_resampled') === false) {
-			$this->SetWidth($this->getWidth() / 2);
+			$this->SetWidth($this->getWidth());
 		} else {
 			// prevously resampled.
 			$this->SetWidth($this->getWidth());
@@ -48,6 +48,17 @@ class RetinaImage extends Image {
 			}
 		}
 		return "<img src=\"$normalsizeurl\" alt=\"$title\" srcset=\"$srcset\" />";
+	}
+	
+	/**
+	 * 
+	 * @param type $width
+	 * @param type $height
+	 * @return \RetinaImage
+	 */
+	public function getThumbnail($width, $height) {
+		$this->generateFormattedImage('SetRatioSize',$width, $height);
+		return $this;
 	}
 	
 	/**
@@ -109,6 +120,10 @@ class RetinaImage extends Image {
 			$filename = $this->insertFilenameAppender($filename, '-10x');
 			if (!file_exists($filename) || isset($_GET['flush'])) {
 				call_user_func_array(array($this, "generateFormattedImage"), $args);
+			} else {
+				$this->adaptiveimages['1.0'] = $this->insertFilenameAppender($cacheFile, '-10x');
+				$this->adaptiveimages['1.5'] = $this->insertFilenameAppender($cacheFile, '-15x');
+				$this->adaptiveimages['2.0'] = $this->insertFilenameAppender($cacheFile, '-20x');
 			}
 
 			$cached = RetinaImage_Cached::create($cacheFile);
@@ -138,7 +153,7 @@ class RetinaImage extends Image {
 			'2.0' => $this->insertFilenameAppender($cacheFile, '-20x'),
 		);
 		$gdbackend = Image::get_backend();
-		$defaultQuality = config::inst()->get('RetinaImage', 'default_quality');
+		$defaultQuality = config::inst()->get('RetinaImage', 'defaultQuality');
 		
 		// degrade the quality of the image as the dimensions increase
 		$qualityDegrade = config::inst()->get('RetinaImage', 'qualityDegrade');
@@ -295,8 +310,7 @@ class RetinaImageHtmlEditorField extends HtmlEditorField {
 			if(!$image) {
 				$image = File::find(urldecode(Director::makeRelative($img->getAttribute('src'))));
 			}
-			//debug::show($image);
-			//die();
+			
 			if($image) {
 				$imagemap = $image->toMap();
 				$retinaimage = RetinaImage::create();
@@ -307,7 +321,7 @@ class RetinaImageHtmlEditorField extends HtmlEditorField {
 				$height = $img->getAttribute('height');
 
 				if($width && $height && ($width != $retinaimage->getWidth() || $height != $retinaimage->getHeight()) 
-						|| (!$img->hasAttribute ('srcset') && RetinaImage::$forceretina)) {
+						|| (!$img->hasAttribute ('srcset') && RetinaImage::forceretina)) {
 					//Make sure that the resized image actually returns an image:
 					if(!is_numeric($width) || !is_numeric($height)) {
 						$width = (int)($retinaimage->getWidth() / 2);
