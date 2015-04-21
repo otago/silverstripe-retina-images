@@ -321,7 +321,7 @@ class RetinaImageHtmlEditorField extends HtmlEditorField {
 				$height = $img->getAttribute('height');
 
 				if($width && $height && ($width != $retinaimage->getWidth() || $height != $retinaimage->getHeight()) 
-						|| (!$img->hasAttribute ('srcset') && RetinaImage::forceretina)) {
+						|| (!$img->hasAttribute ('srcset') && RetinaImage::$forceretina)) {
 					//Make sure that the resized image actually returns an image:
 					if(!is_numeric($width) || !is_numeric($height)) {
 						$width = (int)($retinaimage->getWidth() / 2);
