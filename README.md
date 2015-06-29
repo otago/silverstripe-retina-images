@@ -10,8 +10,7 @@ by the W3C draft http://www.w3.org/html/wg/drafts/srcset/w3c-srcset/
 It does it out the box on through the template, WYSIWYG requires a modification 
 to your getCMSFields() method.
 
-Non-compliant browsers require a polyfill. [At this time of writing, all 
-non-webkit browsers require this.](http://caniuse.com/#feat=srcset)
+older browsers require a polyfill. [All modern browsers support the tag](http://caniuse.com/#feat=srcset)
 
 **Only resized images** will be have adaptive images generated, for example
 ```$Image.paddedImage(50)```. There's no point in upscaling native images, but
