@@ -1,8 +1,8 @@
 {
-	"name": "chitosystems/silverstripe-retinaimages",
+	"name": "chitosystems/silverstripe-retina-images",
 	"description": "An add-on for adaptive images.",
 	"type": "silverstripe-module",
-	"homepage": "https://github.com/chitosystems/silverstripe-retinaimages",
+	"homepage": "https://github.com/chitosystems/silverstripe-retina-images",
 	"keywords": ["silverstripe", "retina", "images"],
 	"license": "BSD-3-Clause",
 	"authors": [
@@ -10,7 +10,7 @@
 		{"name": "patjnr","email": "patrick@chitosystems.com"}
 	],
 	"support": {
-		"issues": "https://github.com/chitosystems/silverstripe-retinaimages/issues"
+		"issues": "https://github.com/chitosystems/silverstripe-retina-images/issues"
 	},
 	"require": {
 		"silverstripe/cms": "~3.1",
