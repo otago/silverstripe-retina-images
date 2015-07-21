@@ -42,7 +42,7 @@ class RetinaImage extends Image {
 			if($srcset != "") {
 				$srcset .= ', '; 
 			}
-			$srcset .= $filename;
+			$srcset .= $filename . ' ' . $ratio . 'x';
 			if($ratio == '1.0') {
 				$normalsizeurl = $filename;
 			}
