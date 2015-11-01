@@ -4,10 +4,9 @@
  * Class for device adaptive images (for ‘retina’ or high DPI type screens)
  */
 class RetinaImage extends Image {
-	
+
 	protected $adaptiveimages = array();
 	public static $forceretina = false;
-
 
 	/**
 	 * Generates the image if not already there.
@@ -17,7 +16,6 @@ class RetinaImage extends Image {
 	public function getTag() {
 		// we generate an image to the same width all the time, so we get the
 		// generated images.
-		
 		// native res - down size by 2x.
 		if (strstr($this->Filename, '_resampled') === false) {
 			$this->SetWidth($this->getWidth());
@@ -25,9 +23,9 @@ class RetinaImage extends Image {
 			// prevously resampled.
 			$this->SetWidth($this->getWidth());
 		}
-		
-		$url = $this->getURL();
-		
+
+		$url = parent::getURL();
+
 		$normalsizeurl = $url;
 		$title = ($this->Title) ? $this->Title : $this->Filename;
 		if ($this->Title) {
@@ -39,17 +37,17 @@ class RetinaImage extends Image {
 		}
 		$srcset = "";
 		foreach ($this->adaptiveimages as $ratio => $filename) {
-			if($srcset != "") {
-				$srcset .= ', '; 
+			if ($srcset != "") {
+				$srcset .= ', ';
 			}
 			$srcset .= $filename . ' ' . $ratio . 'x';
-			if($ratio == '1.0') {
+			if ($ratio == '1.0') {
 				$normalsizeurl = $filename;
 			}
 		}
 		return "<img src=\"$normalsizeurl\" alt=\"$title\" srcset=\"$srcset\" />";
 	}
-	
+
 	/**
 	 * 
 	 * @param type $width
@@ -57,10 +55,10 @@ class RetinaImage extends Image {
 	 * @return \RetinaImage
 	 */
 	public function getThumbnail($width, $height) {
-		$this->generateFormattedImage('SetRatioSize',$width, $height);
+		$this->generateFormattedImage('SetRatioSize', $width, $height);
 		return $this;
 	}
-	
+
 	/**
 	 * we check if the file exists on getFormattedImage(). May incur a 
 	 * performance hit, but during testing it seems O.K.
@@ -88,7 +86,7 @@ class RetinaImage extends Image {
 		}
 		return $this->FileName;
 	}
-	
+
 	/**
 	 * removes the appendation from the name
 	 * @param type $filename
@@ -113,7 +111,7 @@ class RetinaImage extends Image {
 	 */
 	public function getFormattedImage($format) {
 		$args = func_get_args();
-		
+
 		if ($this->ID && $this->Filename && Director::fileExists($this->Filename)) {
 			$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
 			$filename = Director::baseFolder() . "/" . $cacheFile;
@@ -131,7 +129,7 @@ class RetinaImage extends Image {
 			$cached->Title = $this->Title;
 			// Pass through the parent, to store cached images in correct folder.
 			$cached->ParentID = $this->ParentID;
-			
+
 			return $cached;
 		}
 	}
@@ -154,11 +152,11 @@ class RetinaImage extends Image {
 		);
 		$gdbackend = Image::get_backend();
 		$defaultQuality = config::inst()->get('RetinaImage', 'defaultQuality');
-		
+
 		// degrade the quality of the image as the dimensions increase
 		$qualityDegrade = config::inst()->get('RetinaImage', 'qualityDegrade');
 		$qualityCap = config::inst()->get('RetinaImage', 'qualityCap');
-		
+
 		// iterate through each resoultion to generate
 		foreach ($DPIlist as $multiplier => $filename) {
 			$backend = Injector::inst()->createWithArgs($gdbackend, array(
@@ -181,10 +179,10 @@ class RetinaImage extends Image {
 					} else if (isset($args[1]) && is_numeric($args[1])) {
 						$modifiedargs[1] = (int) ($args[1] * $multiplier);
 					}
-					
+
 					// degrade the quality as the higher images progress
-					$quality = $defaultQuality - (($multiplier-1) * $qualityDegrade);
-					if($quality < $qualityCap) {
+					$quality = $defaultQuality - (($multiplier - 1) * $qualityDegrade);
+					if ($quality < $qualityCap) {
 						$quality = $qualityCap;
 					}
 					$backend->setQuality($quality);
@@ -198,6 +196,19 @@ class RetinaImage extends Image {
 				}
 			}
 		}
+	}
+
+	/**
+	 * return a 1x image url if resampled
+	 * @return string
+	 */
+	public function getURL() {
+		$url = parent::getURL();
+		
+		if (strstr($url, '_resampled') === false) {
+			return $url;
+		}
+		return $this->insertFilenameAppender($url, '-10x');
 	}
 
 }
@@ -245,7 +256,7 @@ class RetinaImage_Cached extends RetinaImage {
 	 * @return string
 	 */
 	public function getTag() {
-		$url = $this->getURL();
+		$url = Image::getURL();
 		$title = ($this->Title) ? $this->Title : $this->Filename;
 		if ($this->Title) {
 			$title = Convert::raw2att($this->Title);
@@ -262,91 +273,93 @@ class RetinaImage_Cached extends RetinaImage {
 		$filename = urldecode(Director::makeRelative($onex10));
 		$imagefile = Director::baseFolder() . '/' . $filename;
 		$size = getimagesize($imagefile);
-		
+
 		return "<img src=\"$onex10\" alt=\"$title\" width=\"$size[0]\" height=\"$size[1]\" srcset=\"$onex10 1x, $onex15 1.5x, $onex20 2x\" />";
 	}
 }
 
 class RetinaImageHtmlEditorField extends HtmlEditorField {
-	
+
 	/**
 	 * @see TextareaField::__construct()
 	 */
 	public function __construct($name, $title = null, $value = '') {
 		parent::__construct($name, $title, $value);
-		
+
 		$this->extraClasses [] = 'htmleditor';
-		
+
 		self::include_js();
 	}
-	
-	
+
 	public function saveInto(DataObjectInterface $record) {
-		if($record->hasField($this->name) && $record->escapeTypeForField($this->name) != 'xml') {
-			throw new Exception (
-				'HtmlEditorField->saveInto(): This field should save into a HTMLText or HTMLVarchar field.'
+		if ($record->hasField($this->name) && $record->escapeTypeForField($this->name) != 'xml') {
+			throw new Exception(
+			'HtmlEditorField->saveInto(): This field should save into a HTMLText or HTMLVarchar field.'
 			);
 		}
-		
+
 		$htmlValue = Injector::inst()->create('HTMLValue', $this->value);
 
 		// Sanitise if requested
-		if($this->config()->sanitise_server_side) {
+		if ($this->config()->sanitise_server_side) {
 			$santiser = Injector::inst()->create('HtmlEditorSanitiser', HtmlEditorConfig::get_active());
 			$santiser->sanitise($htmlValue);
 		}
 
 		// Resample images and add default attributes
-		if($images = $htmlValue->getElementsByTagName('img')) foreach($images as $img) {
-			// strip any ?r=n data from the src attribute
-			$img->setAttribute('src', preg_replace('/([^\?]*)\?r=[0-9]+$/i', '$1', $img->getAttribute('src')));
+		if ($images = $htmlValue->getElementsByTagName('img'))
+			foreach ($images as $img) {
+				// strip any ?r=n data from the src attribute
+				$img->setAttribute('src', preg_replace('/([^\?]*)\?r=[0-9]+$/i', '$1', $img->getAttribute('src')));
 
-			// Resample the images if the width & height have changed.
-			// TODO: look for -10x here?
-			$filename = RetinaImage::removeFilenameAppender(urldecode(Director::makeRelative($img->getAttribute('src'))),'-10x');
-			$image = File::find($filename);
-			
-			// try to find it using the legacy way
-			if(!$image) {
-				$image = File::find(urldecode(Director::makeRelative($img->getAttribute('src'))));
-			}
-			
-			if($image) {
-				$imagemap = $image->toMap();
-				$retinaimage = RetinaImage::create();
-				foreach($imagemap as $key => $value) {
-					$retinaimage->$key = $value;
+				// Resample the images if the width & height have changed.
+				// TODO: look for -10x here?
+				$filename = RetinaImage::removeFilenameAppender(urldecode(Director::makeRelative($img->getAttribute('src'))), '-10x');
+				$image = File::find($filename);
+
+				// try to find it using the legacy way
+				if (!$image) {
+					$image = File::find(urldecode(Director::makeRelative($img->getAttribute('src'))));
 				}
-				$width  = $img->getAttribute('width');
-				$height = $img->getAttribute('height');
 
-				if($width && $height && ($width != $retinaimage->getWidth() || $height != $retinaimage->getHeight()) 
-						|| (!$img->hasAttribute ('srcset') && RetinaImage::$forceretina)) {
-					//Make sure that the resized image actually returns an image:
-					if(!is_numeric($width) || !is_numeric($height)) {
-						$width = (int)($retinaimage->getWidth() / 2);
-						$height = (int)($retinaimage->getHeight() / 2);
+				if ($image) {
+					$imagemap = $image->toMap();
+					$retinaimage = RetinaImage::create();
+					foreach ($imagemap as $key => $value) {
+						$retinaimage->$key = $value;
 					}
-					$resized=$retinaimage->ResizedImage($width, $height);
-					$url = $resized->getRelativePath();
-					
-					$onex10 = $retinaimage->insertFilenameAppender($url, '-10x');
-					$onex15 = $retinaimage->insertFilenameAppender($url, '-15x');
-					$onex20 = $retinaimage->insertFilenameAppender($url, '-20x');
-					
-					if($resized) $img->setAttribute('src', $onex10);
-					// srcset=\"$onex10 1x, $onex15 1.5x, $onex20 2x\"
-					$img->setAttribute('srcset', "$onex10 1x, $onex15 1.5x, $onex20 2x");
+					$width = $img->getAttribute('width');
+					$height = $img->getAttribute('height');
+
+					if ($width && $height && ($width != $retinaimage->getWidth() || $height != $retinaimage->getHeight()) || (!$img->hasAttribute('srcset') && RetinaImage::$forceretina)) {
+						//Make sure that the resized image actually returns an image:
+						if (!is_numeric($width) || !is_numeric($height)) {
+							$width = (int) ($retinaimage->getWidth() / 2);
+							$height = (int) ($retinaimage->getHeight() / 2);
+						}
+						$resized = $retinaimage->ResizedImage($width, $height);
+						$url = $resized->getRelativePath();
+
+						$onex10 = $retinaimage->insertFilenameAppender($url, '-10x');
+						$onex15 = $retinaimage->insertFilenameAppender($url, '-15x');
+						$onex20 = $retinaimage->insertFilenameAppender($url, '-20x');
+
+						if ($resized)
+							$img->setAttribute('src', $onex10);
+						// srcset=\"$onex10 1x, $onex15 1.5x, $onex20 2x\"
+						$img->setAttribute('srcset', "$onex10 1x, $onex15 1.5x, $onex20 2x");
+					}
 				}
+
+				// Add default empty title & alt attributes.
+				if (!$img->getAttribute('alt'))
+					$img->setAttribute('alt', '');
+				if (!$img->getAttribute('title'))
+					$img->setAttribute('title', '');
 			}
-			
-			// Add default empty title & alt attributes.
-			if(!$img->getAttribute('alt')) $img->setAttribute('alt', '');
-			if(!$img->getAttribute('title')) $img->setAttribute('title', '');
-		}
 
 		// Store into record
 		$record->{$this->name} = $htmlValue->getContent();
 	}
-}
 
+}
