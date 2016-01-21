@@ -288,7 +288,32 @@ class RetinaImageHtmlEditorField extends HtmlEditorField {
 
 		$this->extraClasses [] = 'htmleditor';
 
-		self::include_js();
+		HtmlEditorConfig::require_js();
+		
+		// when updating the resampled image, find the orginal.
+		// ideally this would live server side in HtmlEditorField_Toolbar(), however 
+		// injecting it with a function would be overkill.
+		Requirements::customScript("
+(function($) {
+	$.entwine('ss', function($) {
+		$('form.htmleditorfield-form').entwine({
+			updateFromEditor: function() {			
+				var self = this, node = this.getSelection();
+				if(node.is('img')) {
+					myfixurl = node.data('url') || node.attr('src');
+					myfixurl = myfixurl.replace('-10x', '');
+
+					this.showFileView(myfixurl).done(function(filefield) {
+						filefield.updateFromNode(node);
+						self.toggleCloseButton();
+						self.redraw();
+					});
+				}
+				this.redraw();
+			},
+		});
+	});
+})(jQuery);");
 	}
 
 	public function saveInto(DataObjectInterface $record) {
