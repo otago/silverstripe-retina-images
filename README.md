@@ -26,16 +26,13 @@ Note this will half the size of every non resized image.
 ## WYSIWYG support
 
 You'll need to modify your ```getCMSFields()``` function. ```create()``` a 
-\HtmlEditorField isntead of using ```new```, there's a custom class that will 
+\HtmlEditorField instead of using ```new```, there's a custom class that will 
 modify its behaviour. In most cases you'll only need to do this once in your
 Page.php file:
 
 ```
-$fields->removeFieldFromTab('Root.Main', 'Content');
-$fields->addFieldToTab('Root.Main', 
-	HtmlEditorField::create('Content', _t('SiteTree.HTMLEDITORTITLE', 'Content', 'HTML editor title')),
-	'Metadata'
-);
+		$fields->replaceField('Content', 
+				HtmlEditorField::create("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", 'HTML editor title')));
 ```
 
 ## How it works
