@@ -1,15 +1,15 @@
 {
-	"name": "otago/silverstripe-retinaimages",
+	"name": "otago/silverstripe-retina-images",
 	"description": "An add-on for adaptive images.",
 	"type": "silverstripe-module",
-	"homepage": "https://github.com/otago/silverstripe-retinaimages",
+	"homepage": "https://github.com/otago/silverstripe-retina-images",
 	"keywords": ["silverstripe", "retina", "images"],
 	"license": "BSD-3-Clause",
 	"authors": [
 		{"name": "Torleif","email": "torleifw@op.ac.nz"}
 	],
 	"support": {
-		"issues": "https://github.com/otago/silverstripe-retinaimages/issues"
+		"issues": "https://github.com/otago/silverstripe-retina-images/issues"
 	},
 	"require": {
 		"silverstripe/cms": "~3.1",
