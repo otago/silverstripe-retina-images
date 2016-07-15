@@ -297,19 +297,16 @@ class RetinaImageHtmlEditorField extends HtmlEditorField {
 (function($) {
 	$.entwine('ss', function($) {
 		$('form.htmleditorfield-form').entwine({
-			updateFromEditor: function() {			
+			updateFromEditor: function() {		
 				var self = this, node = this.getSelection();
 				if(node.is('img')) {
 					myfixurl = node.data('url') || node.attr('src');
 					myfixurl = myfixurl.replace('-10x', '');
-
-					this.showFileView(myfixurl).done(function(filefield) {
-						filefield.updateFromNode(node);
-						self.toggleCloseButton();
-						self.redraw();
-					});
+					myfixurl = myfixurl.replace(/_resampled\/(.+)\//, '');
+					node.attr('src', myfixurl);
 				}
 				this.redraw();
+				this._super();
 			},
 		});
 	});
