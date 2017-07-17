@@ -272,9 +272,12 @@ class RetinaImage_Cached extends RetinaImage {
 		// try to get the 10x file size
 		$filename = urldecode(Director::makeRelative($onex10));
 		$imagefile = Director::baseFolder() . '/' . $filename;
-		$size = getimagesize($imagefile);
-
-		return "<img src=\"$onex10\" alt=\"$title\" width=\"$size[0]\" height=\"$size[1]\" srcset=\"$onex10 1x, $onex15 1.5x, $onex20 2x\" />";
+		
+		if (file_exists($imagefile)) {
+			$size = getimagesize($imagefile);
+			return "<img src=\"$onex10\" alt=\"$title\" width=\"$size[0]\" height=\"$size[1]\" srcset=\"$onex10 1x, $onex15 1.5x, $onex20 2x\" />";
+		}
+		return null;
 	}
 }
 
