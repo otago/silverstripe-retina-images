@@ -1,7 +1,10 @@
 ---
 Name: RetinaImage
 ---
-RetinaImage:
-    qualityDegrade: 20
-    qualityCap: 30
-    defaultQuality: 90
+Injector:
+  Image:
+    class: RetinaImage
+  Image_Cached:
+    class: RetinaImage_Cached
+  HtmlEditorField:
+    class: RetinaImageHtmlEditorField

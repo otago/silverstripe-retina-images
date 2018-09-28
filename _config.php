@@ -1,18 +1,11 @@
 <?php
 
-Deprecation::notification_version('1.0', 'retinaimages');
+use SilverStripe\View\Parsers\ShortcodeParser;
 
-define('RETINA_MODULE_DIR', dirname(__FILE__));
+ShortcodeParser::get('default')->unregister('image');
+ShortcodeParser::get('default')
+    ->register('image', [OP\RetinaImageShortcodeProvider::class, 'handle_shortcode']);
 
-
-Object::useCustomClass('Image', 'RetinaImage');
-Object::useCustomClass('Image_Cached', 'RetinaImage_Cached');
-// SiteTree uses new HtmlEditorField() instead of HtmlEditorField::create()
-// as a result if you want retina images in your WYSIWYG editor you'll need to
-// recreate the HtmlEditorField.
-Object::useCustomClass('HtmlEditorField', 'RetinaImageHtmlEditorField');
-
-// tinyCMS additional HTML5 elements
-$wysiwyg = HtmlEditorConfig::get('cms')->getOption('valid_elements');
-$wysiwyg .= ',-img[id|dir|longdesc|usemap|class|src|border|alt=|title|width|height|align|data*|srcset]';
-HtmlEditorConfig::get('cms')->setOption('valid_elements', $wysiwyg);
+ShortcodeParser::get('regenerator')->unregister('image');
+ShortcodeParser::get('regenerator')
+    ->register('image', [OP\RetinaImageShortcodeProvider::class, 'regenerate_shortcode']);
