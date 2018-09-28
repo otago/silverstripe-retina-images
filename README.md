@@ -12,11 +12,6 @@ to your getCMSFields() method.
 
 Older browsers require a polyfill. [All modern browsers support the tag](http://caniuse.com/#feat=srcset)
 
-**Only resized images** will be have adaptive images generated, for example
-```$Image.paddedImage(50)```. There's no point in upscaling native images, but
-you can force halving images changing the boolean on ```$forceretina``` in ```RetinaImage.php```.
-Note this will half the size of every non resized image.
-
 ## Usage
 
 + run ```composer require otago/silverstripe-retinaimages```
