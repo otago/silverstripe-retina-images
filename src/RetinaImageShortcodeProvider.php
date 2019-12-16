@@ -29,7 +29,7 @@ class RetinaImageShortcodeProvider extends ImageShortcodeProvider {
         if ($errorCode) {
             $record = static::find_error_record($errorCode);
         }
-        if (!$record) {
+        if (!$record || !$record->exists()) {
             return null; // There were no suitable matches at all.
         }
 
