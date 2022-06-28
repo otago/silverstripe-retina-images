@@ -1,0 +1,6 @@
+SilverStripe\Assets\Image:
+  extensions:
+    - OP\RetinaImageExtension
+SilverStripe\Assets\Storage\DBFile:
+  extensions:
+    - OP\RetinaImageExtension
