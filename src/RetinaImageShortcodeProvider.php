@@ -7,10 +7,34 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\View\HTML;
 use SilverStripe\Assets\Image;
+use SilverStripe\Assets\File;
 
-class RetinaImageShortcodeProvider extends ImageShortcodeProvider {
+class RetinaImageShortcodeProvider extends ImageShortcodeProvider
+{
 
-    public static function handle_shortcode($args, $content, $parser, $shortcode, $extra = array()) {
+    /**
+     * Gets the list of shortcodes provided by this handler
+     *
+     * @return mixed
+     */
+    public static function get_shortcodes()
+    {
+        return ['image'];
+    }
+
+    /**
+     * Replace"[image id=n]" shortcode with an image reference.
+     * Permission checks will be enforced by the file routing itself.
+     *
+     * @param array $args Arguments passed to the parser
+     * @param string $content Raw shortcode
+     * @param ShortcodeParser $parser Parser
+     * @param string $shortcode Name of shortcode used to register this handler
+     * @param array $extra Extra arguments
+     * @return string Result of the handled shortcode
+     */
+    public static function handle_shortcode($args, $content, $parser, $shortcode, $extra = [])
+    {
         $cache = static::getCache();
         $cacheKey = static::getCacheKey($args);
 
@@ -29,7 +53,7 @@ class RetinaImageShortcodeProvider extends ImageShortcodeProvider {
         if ($errorCode) {
             $record = static::find_error_record($errorCode);
         }
-        if (!$record || !$record->exists()) {
+        if (!$record) {
             return null; // There were no suitable matches at all.
         }
 
@@ -62,12 +86,13 @@ class RetinaImageShortcodeProvider extends ImageShortcodeProvider {
 
         // Build the HTML tag
         $attrs = array_merge(
-                // Set overrideable defaults
-                ['src' => '', 'alt' => $record->Title],
-                // Use all other shortcode arguments
-                $args,
-                // But enforce some values
-                ['id' => '', 'src' => $src], ['srcset' => "$src 1x,$src15  1.5x,$src20 2x"]
+            // Set overrideable defaults
+            ['src' => '', 'alt' => $record->Title],
+            // Use all other shortcode arguments
+            $args,
+            // But enforce some values
+            ['id' => '', 'src' => $src],
+            ['srcset' => "$src 1x,$src15  1.5x,$src20 2x"]
         );
 
         // Clean out any empty attributes
@@ -86,5 +111,4 @@ class RetinaImageShortcodeProvider extends ImageShortcodeProvider {
 
         return $markup;
     }
-
 }
