@@ -43,13 +43,12 @@ class RetinaImageExtension extends Extension
             return $this->owner->Fill($width, $height);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
-    
+
     /**
      * @param int $width
      * @param int $height
@@ -65,16 +64,17 @@ class RetinaImageExtension extends Extension
             return $this->owner->FillMax($width, $height);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
 
     /**
      * @param int $width
      * @param int $height
+     * @param string $backgroundColor
+     * @param float $transparencyPercent
      * @return html
      */
     public function RetinaPad($width, $height, $backgroundColor = 'FFFFFF', $transparencyPercent = 0)
@@ -87,11 +87,10 @@ class RetinaImageExtension extends Extension
             return $this->owner->Pad($width, $height, $backgroundColor, $transparencyPercent);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
 
     /**
@@ -109,11 +108,10 @@ class RetinaImageExtension extends Extension
             return $this->owner->FitMax($width, $height);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
 
     /**
@@ -131,11 +129,10 @@ class RetinaImageExtension extends Extension
             return $this->owner->ResizedImage($width, $height);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
     /**
      * @param int $width
@@ -152,16 +149,14 @@ class RetinaImageExtension extends Extension
             return $this->owner->Fit($width, $height);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
 
     /**
      * @param int $width
-     * @param int $height
      * @return html
      */
     public function RetinaCropWidth($width)
@@ -174,16 +169,14 @@ class RetinaImageExtension extends Extension
             return $this->owner->CropWidth($width);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
 
     /**
      * @param int $width
-     * @param int $height
      * @return html
      */
     public function RetinaCropHeight($width)
@@ -196,16 +189,14 @@ class RetinaImageExtension extends Extension
             return $this->owner->CropHeight($width);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
 
     /**
      * @param int $width
-     * @param int $height
      * @return html
      */
     public function RetinaScaleWidth($width)
@@ -218,16 +209,14 @@ class RetinaImageExtension extends Extension
             return $this->owner->ScaleWidth($width);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
 
     /**
      * @param int $width
-     * @param int $height
      * @return html
      */
     public function RetinaScaleMaxWidth($width)
@@ -240,16 +229,14 @@ class RetinaImageExtension extends Extension
             return $this->owner->ScaleMaxWidth($width);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
 
     /**
      * @param int $width
-     * @param int $height
      * @return html
      */
     public function RetinaScaleMaxHeight($width)
@@ -262,16 +249,14 @@ class RetinaImageExtension extends Extension
             return $this->owner->ScaleMaxHeight($width);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
 
     /**
      * @param int $width
-     * @param int $height
      * @return html
      */
     public function RetinaScaleHeight($width)
@@ -284,10 +269,9 @@ class RetinaImageExtension extends Extension
             return $this->owner->ScaleHeight($width);
         }
 
-        return HTML::createTag('img', [
-            'alt' => $this->owner->Title,
+        return HTML::createTag('img', array_merge($img1->getAttributes(), [
             'src' => $img1->getURL(),
             'srcset' => $img1->getURL() . ' 1x, ' . $img2->getURL() . ' 1.5x,' . $img3->getURL() . ' 2x'
-        ]);
+        ]));
     }
 }
